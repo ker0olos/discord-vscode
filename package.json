@@ -172,7 +172,6 @@
 		"@types/vscode": "^1.63.1",
 		"@typescript-eslint/eslint-plugin": "^5.8.1",
 		"@typescript-eslint/parser": "^5.8.1",
-		"esbuild-loader": "^2.18.0",
 		"eslint": "^8.5.0",
 		"estrella": "^1.4.1",
 		"typescript": "^4.5.4"
