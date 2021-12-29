@@ -1,27 +1,23 @@
 {
 	"name": "discord-vscode",
 	"displayName": "Discord Presence",
-	"version": "5.7.0",
+	"version": "1.0.0",
 	"description": "Update your discord status with a rich presence.",
 	"private": true,
-	"author": {
-		"name": "iCrawl",
-		"email": "icrawltogo@gmail.com"
+	"publisher": "ker0olos",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ker0olos/discord-vscode.git"
 	},
-	"contributors": [
-		{
-			"name": "Frangu Vlad",
-			"email": "kingdgrizzle@gmail.com"
-		}
-	],
-	"publisher": "icrawl",
+	"bugs": {
+		"url": "https://github.com/ker0olos/discord-vscode/issues"
+	},
 	"license": "MIT",
 	"main": "./dist/extension",
 	"scripts": {
-		"prebuild": "npm run lint",
-		"build": "webpack --mode production",
-		"lint": "eslint src --ext .ts",
-		"lint:fix": "eslint src --ext .ts --fix"
+		"build": "./build.js",
+		"watch": "./build.js -watch",
+		"package": "vsce package"
 	},
 	"activationEvents": [
 		"*"
@@ -29,6 +25,9 @@
 	"extensionKind": [
 		"ui"
 	],
+	"engines": {
+		"vscode": "^1.63.0"
+	},
 	"contributes": {
 		"commands": [
 			{
@@ -145,11 +144,6 @@
 						"default": false,
 						"description": "Removes the timestamp"
 					},
-					"discord.removeRemoteRepository": {
-						"type": "boolean",
-						"default": false,
-						"description": "Removes the View Repository button"
-					},
 					"discord.idleTimeout": {
 						"type": "number",
 						"default": 0,
@@ -159,34 +153,15 @@
 			}
 		]
 	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/iCrawl/discord-vscode.git"
-	},
-	"bugs": {
-		"url": "https://github.com/iCrawl/discord-vscode/issues"
-	},
-	"keywords": [
-		"discord",
-		"vscode",
-		"rich",
-		"presence",
-		"rich presence",
-		"rpc"
-	],
 	"categories": [
 		"Other"
 	],
-	"homepage": "https://github.com/iCrawl/discord-vscode#readme",
 	"icon": "assets/icon.png",
-	"galleryBanner": {
-		"color": "#6477C1",
-		"theme": "dark"
-	},
 	"dependencies": {
 		"bufferutil": "^4.0.5",
 		"dayjs": "^1.10.7",
 		"discord-rpc": "^4.0.1",
+		"gitinfo": "^2.4.0",
 		"lodash-es": "^4.17.21",
 		"tslib": "^2.3.1",
 		"utf-8-validate": "^5.0.7"
@@ -197,19 +172,9 @@
 		"@types/vscode": "^1.63.1",
 		"@typescript-eslint/eslint-plugin": "^5.8.1",
 		"@typescript-eslint/parser": "^5.8.1",
-		"clean-webpack-plugin": "^4.0.0",
+		"esbuild-loader": "^2.18.0",
 		"eslint": "^8.5.0",
-		"eslint-config-marine": "^9.1.0",
-		"eslint-config-prettier": "^8.3.0",
-		"eslint-plugin-prettier": "^4.0.0",
-		"prettier": "^2.5.1",
-		"terser-webpack-plugin": "^5.3.0",
-		"ts-loader": "^9.2.6",
-		"typescript": "^4.5.4",
-		"webpack": "^5.65.0",
-		"webpack-cli": "^4.9.1"
-	},
-	"engines": {
-		"vscode": "^1.57.0"
+		"estrella": "^1.4.1",
+		"typescript": "^4.5.4"
 	}
 }

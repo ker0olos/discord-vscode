@@ -1,10 +1,71 @@
 {
-	"root": true,
-	"extends": "marine/prettier/node",
-	"parserOptions": {
-		"project": "./tsconfig.eslint.json"
-	},
-	"rules": {
-		"@typescript-eslint/naming-convention": 0
-	}
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "camelcase": "error",
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "any",
+        "ignoreReadBeforeAssign": false
+      }
+    ],
+    "no-var": ["error"],
+    "linebreak-style": ["error", "unix"],
+    "indent": ["error", 2],
+    "quotes": ["error", "single"],
+    "no-empty-function": "error",
+    "no-unsafe-finally": "off",
+    "brace-style": ["error", "allman"],
+    "semi": ["error", "always"],
+    "prefer-arrow-callback": "error",
+    "space-before-function-paren": ["error", "never"],
+    "space-in-parens": ["error", "never"],
+    "object-curly-spacing": ["error", "always"],
+    "computed-property-spacing": ["error", "never"],
+    "array-bracket-spacing": ["error", "always"],
+    "comma-spacing": ["error", { "after": true }],
+    "comma-dangle": ["error", "never"],
+    "arrow-spacing": ["error", { "before": true, "after": true }],
+    "func-call-spacing": ["error", "never"],
+    "key-spacing": ["error", { "afterColon": true }],
+    "keyword-spacing": ["error", { "before": true, "after": true }],
+    "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+
+    "@typescript-eslint/member-delimiter-style": [ 2, {
+      "multiline": {
+        "delimiter": "comma",
+        "requireLast": false
+      },
+      "singleline": {
+          "delimiter": "comma",
+          "requireLast": false
+      }
+    } ],
+
+    "@typescript-eslint/type-annotation-spacing": ["warn", {
+      "before": false,
+      "after": true,
+      "overrides": {
+        "arrow": {
+          "before": true,
+          "after": true
+        }
+      }
+    }]
+  }
 }
