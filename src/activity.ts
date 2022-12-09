@@ -1,9 +1,8 @@
 import { basename, parse, sep } from 'path';
-import { debug, env, Selection, TextDocument, window, workspace } from 'vscode';
+import { env, Selection, TextDocument, window, workspace } from 'vscode';
 import createGitinfo from 'gitinfo';
 import {
   CONFIG_KEYS,
-  DEBUG_IMAGE_KEY,
   EMPTY,
   FAKE_EMPTY,
   FILE_SIZES,
@@ -43,17 +42,15 @@ export async function activity(previous: ActivityPayload = {})
 
   const appName = env.appName;
 
-  const defaultSmallImageKey = debug.activeDebugSession
-    ? DEBUG_IMAGE_KEY
-    : appName.includes('Insiders')
-      ? VSCODE_INSIDERS_IMAGE_KEY
-      : VSCODE_IMAGE_KEY;
+  const defaultSmallImageKey = appName.includes('Insiders')
+    ? VSCODE_INSIDERS_IMAGE_KEY
+    : VSCODE_IMAGE_KEY;
 
   const defaultSmallImageText = config[CONFIG_KEYS.SmallImage].replace(REPLACE_KEYS.AppName, appName);
   const defaultLargeImageText = config[CONFIG_KEYS.LargeImageIdling];
   
   let state: ActivityPayload = {
-    details: await details(CONFIG_KEYS.DetailsIdling, CONFIG_KEYS.DetailsEditing, CONFIG_KEYS.DetailsDebugging),
+    details: await details(CONFIG_KEYS.DetailsIdling, CONFIG_KEYS.DetailsEditing),
     startTimestamp: config[CONFIG_KEYS.RemoveTimestamp] ? undefined : previous.startTimestamp ?? Date.now(),
     largeImageKey: IDLE_IMAGE_KEY,
     largeImageText: defaultLargeImageText,
@@ -84,11 +81,10 @@ export async function activity(previous: ActivityPayload = {})
 
     state = {
       ...state,
-      details: await details(CONFIG_KEYS.DetailsIdling, CONFIG_KEYS.DetailsEditing, CONFIG_KEYS.DetailsDebugging),
+      details: await details(CONFIG_KEYS.DetailsIdling, CONFIG_KEYS.DetailsEditing),
       state: await details(
         CONFIG_KEYS.LowerDetailsIdling,
-        CONFIG_KEYS.LowerDetailsEditing,
-        CONFIG_KEYS.LowerDetailsDebugging
+        CONFIG_KEYS.LowerDetailsEditing
       )
     };
 
@@ -115,11 +111,9 @@ export async function activity(previous: ActivityPayload = {})
   return state;
 }
 
-async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS, debugging: CONFIG_KEYS)
+async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS)
 {
   const config = getConfig();
-
-  let raw = (config[idling] as string).replace(REPLACE_KEYS.Empty, FAKE_EMPTY);
 
   if (window.activeTextEditor)
   {
@@ -128,7 +122,7 @@ async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS, debugging: CON
     const split = dir.split(sep);
     const dirName = split[split.length - 1];
 
-    const noWorkspaceFound = config[CONFIG_KEYS.LowerDetailsNoWorkspaceFound].replace(REPLACE_KEYS.Empty, FAKE_EMPTY);
+    const noWorkspaceFound = config[CONFIG_KEYS.LowerDetailsNoWorkspaceFound];
     const workspaceFolder = workspace.getWorkspaceFolder(window.activeTextEditor.document.uri);
     const workspaceFolderName = workspaceFolder?.name ?? noWorkspaceFound;
     const workspaceName = workspace.name?.replace(REPLACE_KEYS.VSCodeWorkspace, EMPTY) ?? workspaceFolderName;
@@ -139,14 +133,7 @@ async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS, debugging: CON
 
     const fileIcon = resolveFileIcon(window.activeTextEditor.document);
 
-    if (debug.activeDebugSession)
-    {
-      raw = config[debugging] as string;
-    }
-    else
-    {
-      raw = config[editing] as string;
-    }
+    let raw = config[editing] as string;
 
     if (workspaceFolder)
     {

@@ -1,5 +1,5 @@
 import { Client } from 'discord-rpc'; // eslint-disable-line
-import { commands, ExtensionContext, window, workspace, debug } from 'vscode';
+import { commands, ExtensionContext, window, workspace } from 'vscode';
 import throttle from 'lodash-es/throttle';
 
 import { activity } from './activity';
@@ -53,10 +53,8 @@ async function login()
 
     const onChangeActiveTextEditor = window.onDidChangeActiveTextEditor(() => sendActivity());
     const onChangeTextDocument = workspace.onDidChangeTextDocument(throttle(() => sendActivity(), 2000));
-    const onStartDebugSession = debug.onDidStartDebugSession(() => sendActivity());
-    const onTerminateDebugSession = debug.onDidTerminateDebugSession(() => sendActivity());
 
-    listeners.push(onChangeActiveTextEditor, onChangeTextDocument, onStartDebugSession, onTerminateDebugSession);
+    listeners.push(onChangeActiveTextEditor, onChangeTextDocument);
   });
 
   rpc.on('disconnected', async() =>
