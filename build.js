@@ -8,7 +8,7 @@ build({
   entry: 'src/extension.ts',
   outfile: 'dist/extension.js',
   external: [ 'vscode' ],
-  target: 'node12',
+  target: 'node14',
   platform: 'node',
   bundle: true,
   sourcemap: true,

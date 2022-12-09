@@ -53,8 +53,6 @@ export const enum CONFIG_KEYS {
 	SuppressNotifications = 'suppressNotifications',
 	WorkspaceExcludePatterns = 'workspaceExcludePatterns',
 	SwapBigAndSmallImage = 'swapBigAndSmallImage',
-	RemoveDetails = 'removeDetails',
-	RemoveLowerDetails = 'removeLowerDetails',
 	RemoveTimestamp = 'removeTimestamp',
 	RemoveRemoteRepository = 'removeRemoteRepository',
 	IdleTimeout = 'idleTimeout',
