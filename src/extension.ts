@@ -11,13 +11,15 @@ import { getConfig } from './util';
 
 // statusBarIcon.text = '$(pulse) Connecting to Discord...';
 
-let rpc = new Client({ transport: 'ipc' });
-
 const config = getConfig();
 
 let state = {};
+
 let idle: NodeJS.Timeout | undefined;
+
 let listeners: { dispose(): unknown }[] = [];
+
+let rpc = new Client({ transport: 'ipc' });
 
 export function cleanUp()
 {
@@ -27,11 +29,7 @@ export function cleanUp()
 
 async function sendActivity()
 {
-  state = {
-    ...(await activity(state))
-  };
-  
-  rpc.setActivity(state);
+  await rpc.setActivity(state = await activity(state));
 }
 
 async function login()
@@ -44,12 +42,10 @@ async function login()
   {
     log(LogLevel.Info, 'Successfully connected to Discord');
 
-    cleanUp();
-
     // statusBarIcon.text = '$(globe) Connected to Discord';
     // statusBarIcon.tooltip = 'Connected to Discord';
 
-    void sendActivity();
+    sendActivity();
 
     const onChangeActiveTextEditor = window.onDidChangeActiveTextEditor(() => sendActivity());
     const onChangeTextDocument = workspace.onDidChangeTextDocument(throttle(() => sendActivity(), 2000));
@@ -83,11 +79,11 @@ async function login()
     {
       if (error?.message?.includes('ENOENT'))
       {
-        void window.showErrorMessage('No Discord client detected');
+        window.showErrorMessage('No Discord client detected');
       }
       else
       {
-        void window.showErrorMessage(`Couldn't connect to Discord via RPC: ${error as string}`);
+        window.showErrorMessage(`Couldn't connect to Discord via RPC: ${error as string}`);
       }
     }
 
@@ -142,7 +138,7 @@ export async function activate(context: ExtensionContext)
 
     log(LogLevel.Info, 'Enable: Attempting to recreate login');
 
-    void login();
+    login();
   };
 
   const disable = async(update = true) =>
@@ -163,7 +159,7 @@ export async function activate(context: ExtensionContext)
 
     cleanUp();
 
-    void rpc?.destroy();
+    rpc?.destroy();
 
     log(LogLevel.Info, 'Disable: Destroyed the rpc instance');
 
@@ -234,5 +230,5 @@ export async function activate(context: ExtensionContext)
 export function deactivate()
 {
   cleanUp();
-  void rpc.destroy();
+  rpc.destroy();
 }

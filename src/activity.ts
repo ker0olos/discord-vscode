@@ -16,25 +16,8 @@ import {
 import { log, LogLevel } from './logger';
 import { getConfig, resolveFileIcon, toLower, toTitle, toUpper } from './util';
 
-interface ActivityPayload {
-	details?: string,
-	state?: string,
-	startTimestamp?: number | null,
-	largeImageKey?: string,
-	largeImageText?: string,
-	smallImageKey?: string,
-	smallImageText?: string,
-	partyId?: string,
-	partySize?: number,
-	partyMax?: number,
-	matchSecret?: string,
-	joinSecret?: string,
-	spectateSecret?: string,
-	buttons?: { label: string, url: string }[],
-	instance?: boolean
-}
 
-export async function activity(previous: ActivityPayload = {})
+export async function activity(previous: import('discord-rpc').Presence = {}): Promise<import('discord-rpc').Presence>
 {
   const config = getConfig();
 
@@ -49,7 +32,7 @@ export async function activity(previous: ActivityPayload = {})
   const defaultSmallImageText = config[CONFIG_KEYS.SmallImage].replace(REPLACE_KEYS.AppName, appName);
   const defaultLargeImageText = config[CONFIG_KEYS.LargeImageIdling];
   
-  let state: ActivityPayload = {
+  let state: import('discord-rpc').Presence = {
     details: await details(CONFIG_KEYS.DetailsIdling, CONFIG_KEYS.DetailsEditing),
     startTimestamp: config[CONFIG_KEYS.RemoveTimestamp] ? undefined : previous.startTimestamp ?? Date.now(),
     largeImageKey: IDLE_IMAGE_KEY,
@@ -115,6 +98,8 @@ async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS)
 {
   const config = getConfig();
 
+  let raw = (config[idling] as string) ?? FAKE_EMPTY;
+
   if (window.activeTextEditor)
   {
     const fileName = basename(window.activeTextEditor.document.fileName);
@@ -133,7 +118,7 @@ async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS)
 
     const fileIcon = resolveFileIcon(window.activeTextEditor.document);
 
-    let raw = config[editing] as string;
+    raw = config[editing] as string;
 
     if (workspaceFolder)
     {
@@ -224,23 +209,25 @@ async function fileDetails(_raw: string, document: TextDocument, selection: Sele
 
   log(LogLevel.Info, `Reading for git repo at ${dir}/.git`);
 
-  const gitinfo = createGitinfo({
-    gitPath: dir
-  });
+  let name = UNKNOWN_GIT_REPO_NAME as string;
+  let branch = UNKNOWN_GIT_BRANCH as string;
 
-  if (raw.includes(REPLACE_KEYS.GitBranch))
+  try
   {
-    const branch = gitinfo.getBranchName() as string;
+    const gitinfo = createGitinfo({
+      gitPath: dir
+    });
 
-    raw = raw.replace(REPLACE_KEYS.GitBranch, branch ?? UNKNOWN_GIT_BRANCH);
+    name = gitinfo.getName() as string;
+    branch = gitinfo.getBranchName() as string;
+  }
+  catch
+  {
+    //
   }
 
-  if (raw.includes(REPLACE_KEYS.GitRepoName))
-  {
-    const name = gitinfo.getName() as string;
-
-    raw = raw.replace(REPLACE_KEYS.GitRepoName, name ?? UNKNOWN_GIT_REPO_NAME);
-  }
+  raw = raw.replace(REPLACE_KEYS.GitRepoName, name);
+  raw = raw.replace(REPLACE_KEYS.GitBranch, branch);
 
   return raw;
 }

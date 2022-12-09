@@ -13,8 +13,8 @@ export const IDLE_IMAGE_KEY = 'vscode-big' as const;
 export const VSCODE_IMAGE_KEY = 'vscode' as const;
 export const VSCODE_INSIDERS_IMAGE_KEY = 'vscode-insiders' as const;
 
-export const UNKNOWN_GIT_BRANCH = 'Unknown' as const;
-export const UNKNOWN_GIT_REPO_NAME = 'Unknown' as const;
+export const UNKNOWN_GIT_REPO_NAME = 'Untitled' as const;
+export const UNKNOWN_GIT_BRANCH = 'main' as const;
 
 export const enum REPLACE_KEYS {
 	FileName = '{file_name}',
