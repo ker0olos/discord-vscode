@@ -1,10 +1,11 @@
 {
   "name": "discord-vscode",
   "displayName": "Discord Presence",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Update your discord status with a rich presence.",
   "private": true,
   "publisher": "ker0olos",
+  "icon": "assets/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/ker0olos/discord-vscode.git"
@@ -15,8 +16,8 @@
   "license": "MIT",
   "main": "./dist/extension",
   "scripts": {
-    "build": "./build.js",
-    "watch": "./build.js -watch",
+    "build": "./build.cjs",
+    "watch": "./build.cjs -watch",
     "package": "vsce package"
   },
   "activationEvents": [
@@ -69,7 +70,7 @@
           "discord.detailsEditing": {
             "type": "string",
             "default": "Editing {file_name}",
-            "description": "Custom string for the details section of the rich presence\n\t- '{empty}' will be replaced with an empty space.\n\t- '{file_name}' will be replaced with the current file name.\n\t- '{dir_name}' will get replaced with the folder name that has the current file.\n\t- '{full_dir_name}' will get replaced with the full directory name without the current file name.\n\t- '{workspace}' will be replaced with the current workspace name, if any.\n\t- '{workspace_folder}' will be replaced with the currently accessed workspace folder, if any.\n\t- '{workspace_and_folder} will be replaced with the currently accessed workspace and workspace folder like this: 'Workspace - WorkspaceFolder'\n\t- '{current_column}' will get replaced with the current column of the current line.\n\t- '{current_line}' will get replaced with the current line number.\n\t- '{total_lines}' will get replaced with the total line number.\n\t- '{file_size}' will get replaced with the current file's size.\n\t- '{git_repo_name}' will be replaced with the active Git repository name (from the git URL)\n\t- '{git_branch}' will be replaced with the current active branch name."
+            "description": "Custom string for the details section of the rich presence\n\t- '{empty}' will be replaced with an empty space.\n\t- '{file_name}' will be replaced with the current file name.\n\t- '{dir_name}' will get replaced with the folder name that has the current file.\n\t- '{full_dir_name}' will get replaced with the full directory name without the current file name.\n\t- '{workspace}' will be replaced with the current workspace name, if any.\n\t- '{workspace_folder}' will be replaced with the currently accessed workspace folder, if any.\n\t- '{workspace_and_folder} will be replaced with the currently accessed workspace and workspace folder like this: 'Workspace - WorkspaceFolder'\n\t- '{current_column}' will get replaced with the current column of the current line.\n\t- '{current_line}' will get replaced with the current line number.\n\t- '{total_lines}' will get replaced with the total line number.\n\t- '{file_size}' will get replaced with the current file's size.\n\t- '{git_repo}' will be replaced with the active Git repository name (from the git URL)"
           },
           "discord.lowerDetailsIdling": {
             "type": "string",
@@ -79,7 +80,7 @@
           "discord.lowerDetailsEditing": {
             "type": "string",
             "default": "Workspace: {workspace}",
-            "description": "Custom string for the state section of the rich presence\n\t- '{empty}' will be replaced with an empty space.\n\t- '{file_name}' will be replaced with the current file name.\n\t- '{dir_name}' will get replaced with the folder name that has the current file.\n\t- '{full_dir_name}' will get replaced with the full directory name without the current file name.\n\t- '{workspace}' will be replaced with the current workspace name, if any.\n\t- '{workspace_folder}' will be replaced with the currently accessed workspace folder, if any.\n\t- '{workspace_and_folder} will be replaced with the currently accessed workspace and workspace folder like this: 'Workspace - WorkspaceFolder'\n\t- '{current_column}' will get replaced with the current column of the current line.\n\t- '{current_line}' will get replaced with the current line number.\n\t- '{total_lines}' will get replaced with the total line number.\n\t- '{file_size}' will get replaced with the current file's size.\n\t- '{git_repo_name}' will be replaced with the active Git repository name (from the git URL)\n\t- '{git_branch}' will be replaced with the current active branch name."
+            "description": "Custom string for the state section of the rich presence\n\t- '{empty}' will be replaced with an empty space.\n\t- '{file_name}' will be replaced with the current file name.\n\t- '{dir_name}' will get replaced with the folder name that has the current file.\n\t- '{full_dir_name}' will get replaced with the full directory name without the current file name.\n\t- '{workspace}' will be replaced with the current workspace name, if any.\n\t- '{workspace_folder}' will be replaced with the currently accessed workspace folder, if any.\n\t- '{workspace_and_folder} will be replaced with the currently accessed workspace and workspace folder like this: 'Workspace - WorkspaceFolder'\n\t- '{current_column}' will get replaced with the current column of the current line.\n\t- '{current_line}' will get replaced with the current line number.\n\t- '{total_lines}' will get replaced with the total line number.\n\t- '{file_size}' will get replaced with the current file's size.\n\t- '{git_repo}' will be replaced with the active Git repository name (from the git URL)"
           },
           "discord.lowerDetailsNoWorkspaceFound": {
             "type": "string",
@@ -136,16 +137,11 @@
   "categories": [
     "Other"
   ],
-  "icon": "assets/icon.png",
   "dependencies": {
-    "@vscode/vsce": "^2.15.0",
-    "bufferutil": "^4.0.7",
     "dayjs": "^1.11.7",
     "discord-rpc": "^4.0.1",
     "gitinfo": "^2.4.0",
-    "lodash-es": "^4.17.21",
-    "tslib": "^2.4.1",
-    "utf-8-validate": "^5.0.10"
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
     "@types/discord-rpc": "^4.0.3",
@@ -154,6 +150,7 @@
     "@types/vscode": "^1.74.0",
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
+    "@vscode/vsce": "^2.16.0",
     "eslint": "^8.29.0",
     "estrella": "^1.4.1",
     "typescript": "^4.9.4"

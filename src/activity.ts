@@ -8,8 +8,6 @@ import {
   FILE_SIZES,
   IDLE_IMAGE_KEY,
   REPLACE_KEYS,
-  UNKNOWN_GIT_BRANCH,
-  UNKNOWN_GIT_REPO_NAME,
   VSCODE_IMAGE_KEY,
   VSCODE_INSIDERS_IMAGE_KEY
 } from './constants';
@@ -142,6 +140,7 @@ async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS)
     raw = raw
       .replace(REPLACE_KEYS.FileName, fileName)
       .replace(REPLACE_KEYS.DirName, dirName)
+      .replace(REPLACE_KEYS.GitRepo, workspaceName)
       .replace(REPLACE_KEYS.Workspace, workspaceName)
       .replace(REPLACE_KEYS.WorkspaceFolder, workspaceFolderName)
       .replace(REPLACE_KEYS.WorkspaceAndFolder, workspaceAndFolder)
@@ -209,25 +208,18 @@ async function fileDetails(_raw: string, document: TextDocument, selection: Sele
 
   log(LogLevel.Info, `Reading for git repo at ${dir}/.git`);
 
-  let name = UNKNOWN_GIT_REPO_NAME as string;
-  let branch = UNKNOWN_GIT_BRANCH as string;
-
   try
   {
     const gitinfo = createGitinfo({
       gitPath: dir
     });
 
-    name = gitinfo.getName() as string;
-    branch = gitinfo.getBranchName() as string;
+    raw = raw.replace(REPLACE_KEYS.GitRepo, `${gitinfo.getName()}@${gitinfo.getBranchName()}`);
   }
   catch
   {
     //
   }
-
-  raw = raw.replace(REPLACE_KEYS.GitRepoName, name);
-  raw = raw.replace(REPLACE_KEYS.GitBranch, branch);
 
   return raw;
 }

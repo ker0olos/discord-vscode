@@ -9,12 +9,9 @@ export const EMPTY = '' as const;
 export const FAKE_EMPTY = '\u200b\u200b' as const;
 export const FILE_SIZES = [ ' bytes', 'kb', 'mb', 'gb', 'tb' ] as const;
 
-export const IDLE_IMAGE_KEY = 'vscode-big' as const;
 export const VSCODE_IMAGE_KEY = 'vscode' as const;
+export const IDLE_IMAGE_KEY = 'vscode-big' as const;
 export const VSCODE_INSIDERS_IMAGE_KEY = 'vscode-insiders' as const;
-
-export const UNKNOWN_GIT_REPO_NAME = 'Untitled' as const;
-export const UNKNOWN_GIT_BRANCH = 'main' as const;
 
 export const enum REPLACE_KEYS {
 	FileName = '{file_name}',
@@ -32,8 +29,7 @@ export const enum REPLACE_KEYS {
 	CurrentColumn = '{current_column}',
 	FileSize = '{file_size}',
 	AppName = '{app_name}',
-	GitRepoName = '{git_repo_name}',
-	GitBranch = '{git_branch}',
+	GitRepo = '{git_repo}',
 }
 
 export const enum CONFIG_KEYS {
