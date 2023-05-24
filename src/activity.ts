@@ -1,6 +1,9 @@
 import { basename, parse, sep } from 'path';
+
 import { env, Selection, TextDocument, window, workspace } from 'vscode';
+
 import createGitinfo from 'gitinfo';
+
 import {
   CONFIG_KEYS,
   EMPTY,
@@ -11,12 +14,13 @@ import {
   VSCODE_IMAGE_KEY,
   VSCODE_INSIDERS_IMAGE_KEY
 } from './constants';
+
 import { log, LogLevel } from './logger';
+
 import { getConfig, resolveFileIcon, toLower, toTitle, toUpper } from './util';
 
 
-export async function activity(previous: import('discord-rpc').Presence = {}): Promise<import('discord-rpc').Presence>
-{
+export async function activity(previous: import('discord-rpc').Presence = {}): Promise<import('discord-rpc').Presence> {
   const config = getConfig();
 
   const swapBigAndSmallImage = config[CONFIG_KEYS.SwapBigAndSmallImage];
@@ -28,10 +32,10 @@ export async function activity(previous: import('discord-rpc').Presence = {}): P
     : VSCODE_IMAGE_KEY;
 
   const defaultSmallImageText = config[CONFIG_KEYS.SmallImage].replace(REPLACE_KEYS.AppName, appName);
-  const defaultLargeImageText = config[CONFIG_KEYS.LargeImageIdling];
-  
+  const defaultLargeImageText = config[CONFIG_KEYS.LowerDetailsNoWorkspaceFound];
+
   let state: import('discord-rpc').Presence = {
-    details: await details(CONFIG_KEYS.DetailsIdling, CONFIG_KEYS.DetailsEditing),
+    details: await details(CONFIG_KEYS.DetailsEditing),
     startTimestamp: config[CONFIG_KEYS.RemoveTimestamp] ? undefined : previous.startTimestamp ?? Date.now(),
     largeImageKey: IDLE_IMAGE_KEY,
     largeImageText: defaultLargeImageText,
@@ -39,8 +43,7 @@ export async function activity(previous: import('discord-rpc').Presence = {}): P
     smallImageText: defaultSmallImageText
   };
 
-  if (swapBigAndSmallImage)
-  {
+  if (swapBigAndSmallImage) {
     state = {
       ...state,
       largeImageKey: defaultSmallImageKey,
@@ -50,8 +53,7 @@ export async function activity(previous: import('discord-rpc').Presence = {}): P
     };
   }
 
-  if (window.activeTextEditor)
-  {
+  if (window.activeTextEditor) {
     const largeImageKey = resolveFileIcon(window.activeTextEditor.document);
 
     const largeImageText = config[CONFIG_KEYS.LargeImage]
@@ -62,23 +64,18 @@ export async function activity(previous: import('discord-rpc').Presence = {}): P
 
     state = {
       ...state,
-      details: await details(CONFIG_KEYS.DetailsIdling, CONFIG_KEYS.DetailsEditing),
-      state: await details(
-        CONFIG_KEYS.LowerDetailsIdling,
-        CONFIG_KEYS.LowerDetailsEditing
-      )
+      details: await details(CONFIG_KEYS.DetailsEditing),
+      state: await details(CONFIG_KEYS.LowerDetailsEditing)
     };
 
-    if (swapBigAndSmallImage)
-    {
+    if (swapBigAndSmallImage) {
       state = {
         ...state,
         smallImageKey: largeImageKey,
         smallImageText: largeImageText
       };
     }
-    else
-    {
+    else {
       state = {
         ...state,
         largeImageKey,
@@ -92,34 +89,30 @@ export async function activity(previous: import('discord-rpc').Presence = {}): P
   return state;
 }
 
-async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS)
-{
+async function details(editing: CONFIG_KEYS) {
   const config = getConfig();
 
-  let raw = (config[idling] as string) ?? FAKE_EMPTY;
+  const noWorkspaceFound = config[CONFIG_KEYS.LowerDetailsNoWorkspaceFound];
 
-  if (window.activeTextEditor)
-  {
+  let raw: string = noWorkspaceFound ?? FAKE_EMPTY;
+
+  if (window.activeTextEditor) {
     const fileName = basename(window.activeTextEditor.document.fileName);
     const { dir } = parse(window.activeTextEditor.document.fileName);
     const split = dir.split(sep);
     const dirName = split[split.length - 1];
 
-    const noWorkspaceFound = config[CONFIG_KEYS.LowerDetailsNoWorkspaceFound];
     const workspaceFolder = workspace.getWorkspaceFolder(window.activeTextEditor.document.uri);
     const workspaceFolderName = workspaceFolder?.name ?? noWorkspaceFound;
     const workspaceName = workspace.name?.replace(REPLACE_KEYS.VSCodeWorkspace, EMPTY) ?? workspaceFolderName;
 
-    const workspaceAndFolder = `${workspaceName}${
-      workspaceFolderName === FAKE_EMPTY ? '' : ` - ${workspaceFolderName}`
-    }`;
+    const workspaceAndFolder = `${workspaceName}${workspaceFolderName === FAKE_EMPTY ? '' : ` - ${workspaceFolderName}`}`;
 
     const fileIcon = resolveFileIcon(window.activeTextEditor.document);
 
     raw = config[editing] as string;
 
-    if (workspaceFolder)
-    {
+    if (workspaceFolder) {
       const { name } = workspaceFolder;
       const relativePath = workspace.asRelativePath(window.activeTextEditor.document.fileName).split(sep);
 
@@ -128,12 +121,10 @@ async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS)
       raw = raw.replace(REPLACE_KEYS.FullDirName, `${name}${sep}${relativePath.join(sep)}`);
     }
 
-    try
-    {
+    try {
       raw = await fileDetails(raw, window.activeTextEditor.document, window.activeTextEditor.selection);
     }
-    catch (error)
-    {
+    catch (error) {
       log(LogLevel.Error, `Failed to generate file details: ${error as string}`);
     }
 
@@ -152,32 +143,26 @@ async function details(idling: CONFIG_KEYS, editing: CONFIG_KEYS)
   return raw;
 }
 
-async function fileDetails(_raw: string, document: TextDocument, selection: Selection)
-{
+async function fileDetails(_raw: string, document: TextDocument, selection: Selection) {
   let raw = _raw.slice();
 
-  if (raw.includes(REPLACE_KEYS.TotalLines))
-  {
+  if (raw.includes(REPLACE_KEYS.TotalLines)) {
     raw = raw.replace(REPLACE_KEYS.TotalLines, document.lineCount.toLocaleString());
   }
 
-  if (raw.includes(REPLACE_KEYS.CurrentLine))
-  {
+  if (raw.includes(REPLACE_KEYS.CurrentLine)) {
     raw = raw.replace(REPLACE_KEYS.CurrentLine, (selection.active.line + 1).toLocaleString());
   }
 
-  if (raw.includes(REPLACE_KEYS.CurrentColumn))
-  {
+  if (raw.includes(REPLACE_KEYS.CurrentColumn)) {
     raw = raw.replace(REPLACE_KEYS.CurrentColumn, (selection.active.character + 1).toLocaleString());
   }
 
-  if (raw.includes(REPLACE_KEYS.FileSize))
-  {
+  if (raw.includes(REPLACE_KEYS.FileSize)) {
     let size: number;
     let currentDivision = 0;
 
-    try
-    {
+    try {
       ({ size } = await workspace.fs.stat(document.uri));
     }
     catch
@@ -187,12 +172,10 @@ async function fileDetails(_raw: string, document: TextDocument, selection: Sele
 
     const originalSize = size;
 
-    if (originalSize > 1000)
-    {
+    if (originalSize > 1000) {
       size /= 1000;
       currentDivision++;
-      while (size > 1000)
-      {
+      while (size > 1000) {
         currentDivision++;
         size /= 1000;
       }
@@ -208,8 +191,7 @@ async function fileDetails(_raw: string, document: TextDocument, selection: Sele
 
   log(LogLevel.Info, `Reading for git repo at ${dir}/.git`);
 
-  try
-  {
+  try {
     const gitinfo = createGitinfo({
       gitPath: dir
     });

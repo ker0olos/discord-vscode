@@ -7,7 +7,7 @@ export const KNOWN_LANGUAGES: { language: string, image: string }[] = LANG.KNOWN
 
 export const EMPTY = '' as const;
 export const FAKE_EMPTY = '\u200b\u200b' as const;
-export const FILE_SIZES = [ ' bytes', 'kb', 'mb', 'gb', 'tb' ] as const;
+export const FILE_SIZES = [' bytes', 'kb', 'mb', 'gb', 'tb'] as const;
 
 export const VSCODE_IMAGE_KEY = 'vscode' as const;
 export const IDLE_IMAGE_KEY = 'vscode-big' as const;
@@ -34,18 +34,12 @@ export const enum REPLACE_KEYS {
 
 export const enum CONFIG_KEYS {
 	Enabled = 'enabled',
-	DetailsIdling = 'detailsIdling',
 	DetailsEditing = 'detailsEditing',
-	LowerDetailsIdling = 'lowerDetailsIdling',
 	LowerDetailsEditing = 'lowerDetailsEditing',
 	LowerDetailsNoWorkspaceFound = 'lowerDetailsNoWorkspaceFound',
-	LargeImageIdling = 'largeImageIdling',
 	LargeImage = 'largeImage',
 	SmallImage = 'smallImage',
 	SuppressNotifications = 'suppressNotifications',
-	WorkspaceExcludePatterns = 'workspaceExcludePatterns',
 	SwapBigAndSmallImage = 'swapBigAndSmallImage',
 	RemoveTimestamp = 'removeTimestamp',
-	RemoveRemoteRepository = 'removeRemoteRepository',
-	IdleTimeout = 'idleTimeout',
 }

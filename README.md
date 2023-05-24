@@ -1,2 +1,2 @@
-This work is optimized for git repositories. Some features were cut to simplify
-the code
+This work is optimized for git repositories. Features were cut to simplify the
+settings

@@ -1,7 +1,7 @@
 {
   "name": "discord-vscode",
   "displayName": "Discord Presence",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Update your discord status with a rich presence.",
   "private": true,
   "publisher": "ker0olos",
@@ -62,20 +62,10 @@
             "default": true,
             "description": "Controls if the Discord Presence should show across all workspaces"
           },
-          "discord.detailsIdling": {
-            "type": "string",
-            "default": "Idling",
-            "description": "Custom string for the details section of the rich presence when idling\n\t- '{empty}' will be replaced with an empty space."
-          },
           "discord.detailsEditing": {
             "type": "string",
             "default": "Editing {file_name}",
             "description": "Custom string for the details section of the rich presence\n\t- '{empty}' will be replaced with an empty space.\n\t- '{file_name}' will be replaced with the current file name.\n\t- '{dir_name}' will get replaced with the folder name that has the current file.\n\t- '{full_dir_name}' will get replaced with the full directory name without the current file name.\n\t- '{workspace}' will be replaced with the current workspace name, if any.\n\t- '{workspace_folder}' will be replaced with the currently accessed workspace folder, if any.\n\t- '{workspace_and_folder} will be replaced with the currently accessed workspace and workspace folder like this: 'Workspace - WorkspaceFolder'\n\t- '{current_column}' will get replaced with the current column of the current line.\n\t- '{current_line}' will get replaced with the current line number.\n\t- '{total_lines}' will get replaced with the total line number.\n\t- '{file_size}' will get replaced with the current file's size.\n\t- '{git_repo}' will be replaced with the active Git repository name (from the git URL)"
-          },
-          "discord.lowerDetailsIdling": {
-            "type": "string",
-            "default": "Idling",
-            "description": "Custom string for the state section of the rich presence when idling\n\t- '{empty}' will be replaced with an empty space."
           },
           "discord.lowerDetailsEditing": {
             "type": "string",
@@ -86,11 +76,6 @@
             "type": "string",
             "default": "No workspace",
             "description": "Custom string for the state section of the rich presence when no workspace is found.\nIf set to '{empty}', this will be an empty space.\n\t- '{current_line}' will get replaced with the current line number.\n\t- '{total_lines}' will get replaced with the total line number.\n\t- '{file_size}' will get replaced with the current file's size."
-          },
-          "discord.largeImageIdling": {
-            "type": "string",
-            "default": "Idling",
-            "description": "Custom string for the largeImageText section of the rich presence when idling"
           },
           "discord.largeImage": {
             "type": "string",
@@ -107,14 +92,6 @@
             "default": false,
             "description": "Decides if error messages are shown to the user"
           },
-          "discord.workspaceExcludePatterns": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "default": [],
-            "description": "Patterns of workspaces to ignore"
-          },
           "discord.swapBigAndSmallImage": {
             "type": "boolean",
             "default": false,
@@ -124,11 +101,6 @@
             "type": "boolean",
             "default": false,
             "description": "Removes the timestamp"
-          },
-          "discord.idleTimeout": {
-            "type": "number",
-            "default": 0,
-            "description": "Time (in seconds) to clear the presence when idling. 0 (the default) means no clearing"
           }
         }
       }

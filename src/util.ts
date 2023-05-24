@@ -4,26 +4,18 @@ import { TextDocument, workspace, WorkspaceConfiguration } from 'vscode';
 import { KNOWN_EXTENSIONS, KNOWN_LANGUAGES } from './constants';
 
 type WorkspaceExtensionConfiguration = WorkspaceConfiguration & {
-	enabled: boolean,
-	detailsIdling: string,
-	detailsEditing: string,
-	lowerDetailsIdling: string,
-	lowerDetailsEditing: string,
-	lowerDetailsNoWorkspaceFound: string,
-	largeImageIdling: string,
-	largeImage: string,
-	smallImage: string,
-	suppressNotifications: boolean,
-	workspaceExcludePatterns: string[],
-	swapBigAndSmallImage: boolean,
-	removeLowerDetails: boolean,
-	removeTimestamp: boolean,
-	removeRemoteRepository: boolean,
-	idleTimeout: number
+  enabled: boolean,
+  detailsEditing: string,
+  lowerDetailsEditing: string,
+  lowerDetailsNoWorkspaceFound: string,
+  largeImage: string,
+  smallImage: string,
+  suppressNotifications: boolean,
+  swapBigAndSmallImage: boolean,
+  removeTimestamp: boolean,
 };
 
-export function getConfig()
-{
+export function getConfig() {
   return workspace.getConfiguration('discord') as WorkspaceExtensionConfiguration;
 }
 
@@ -33,21 +25,17 @@ export const toUpper = (str: string) => str.toLocaleUpperCase();
 
 export const toTitle = (str: string) => toLower(str).replace(/^\w/, (c) => toUpper(c));
 
-export function resolveFileIcon(document: TextDocument)
-{
+export function resolveFileIcon(document: TextDocument) {
   const filename = basename(document.fileName);
-  
-  const findKnownExtension = Object.keys(KNOWN_EXTENSIONS).find((key) =>
-  {
-    if (filename.endsWith(key))
-    {
+
+  const findKnownExtension = Object.keys(KNOWN_EXTENSIONS).find((key) => {
+    if (filename.endsWith(key)) {
       return true;
     }
 
     const match = /^\/(.*)\/([mgiy]+)$/.exec(key);
 
-    if (!match)
-    {
+    if (!match) {
       return false;
     }
 
