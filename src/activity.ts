@@ -34,13 +34,27 @@ export async function activity(previous: import('discord-rpc').Presence = {}): P
   const defaultSmallImageText = config[CONFIG_KEYS.SmallImage].replace(REPLACE_KEYS.AppName, appName);
   const defaultLargeImageText = config[CONFIG_KEYS.LowerDetailsNoWorkspaceFound];
 
+  let buttonEnabled = config[CONFIG_KEYS.ButtonEnabled];
+  let buttonLabel = config[CONFIG_KEYS.ButtonLabel] || FAKE_EMPTY;
+  let buttonUrl = config[CONFIG_KEYS.ButtonUrl] || FAKE_EMPTY;
+
+  let buttons: import('discord-rpc').Presence['buttons'] | undefined = undefined;
+
+  if (buttonEnabled) {
+    buttons = [{
+      label: buttonLabel,
+      url: buttonUrl
+    }];
+  }
+
   let state: import('discord-rpc').Presence = {
     details: await details(CONFIG_KEYS.DetailsEditing),
     startTimestamp: config[CONFIG_KEYS.RemoveTimestamp] ? undefined : previous.startTimestamp ?? Date.now(),
     largeImageKey: IDLE_IMAGE_KEY,
     largeImageText: defaultLargeImageText,
     smallImageKey: defaultSmallImageKey,
-    smallImageText: defaultSmallImageText
+    smallImageText: defaultSmallImageText,
+    buttons
   };
 
   if (swapBigAndSmallImage) {
